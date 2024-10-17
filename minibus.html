@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -111,15 +110,38 @@
                 }
             };
         })();
+
+        // Function to generate a nonce
+        function generateNonce() {
+            return btoa(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(16))));
+        }
+
+        // Apply nonce to scripts and styles
+        document.addEventListener('DOMContentLoaded', () => {
+            const nonce = generateNonce();
+            const metaTag = document.createElement('meta');
+            metaTag.setAttribute('http-equiv', 'Content-Security-Policy');
+            metaTag.setAttribute('content', `default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://cdn.tailwindcss.com 'nonce-${nonce}'; style-src 'self' https://cdn.jsdelivr.net 'nonce-${nonce}';`);
+            document.head.appendChild(metaTag);
+
+            const scripts = document.querySelectorAll('script[nonce-placeholder]');
+            scripts.forEach(script => script.setAttribute('nonce', nonce));
+        });
+
+        // Logging function
+        function logEvent(event) {
+            console.log(`[${new Date().toISOString()}] ${event}`);
+        }
     </script>
 </head>
 <body>
     <!-- Sidebar Component -->
     <div id="sidebarComponent" class="w-64 p-4 mt-6 bg-base-200 hidden" data-class="hidden">
         <p>Sidebar Content</p>
-        <script>
-            // Corrected usage of watch
+        <script nonce-placeholder>
+            // Corrected usage of watch with logging
             MiniBus.watch('buttonComponent.data-click', (value) => {
+                logEvent(`Sidebar visibility toggled: ${value}`);
                 MiniBus.requestStateChange('sidebarComponent', 'sidebarComponent.data-class', value === 'true' ? '' : 'hidden');
             });
         </script>
@@ -128,23 +150,27 @@
     <!-- Button Component -->
     <div id="buttonComponent" data-click="false">
         <button id="toggleButton" class="btn btn-primary" data-text="Toggle Sidebar">Toggle Sidebar</button>
-        <script>
-            // Register the button click event via MiniBus
+        <script nonce-placeholder>
+            // Register the button click event via MiniBus with logging
             MiniBus.registerEvent('buttonComponent', 'click', 'buttonComponent.data-click');
+            logEvent('Button component click event registered');
 
             // Grant permission for buttonComponent to modify the button text (only allowed if within hierarchy)
             MiniBus.grantPermission('buttonComponent', 'toggleButton.data-text');
+            logEvent('Permission granted for buttonComponent to modify toggleButton');
 
-            // Corrected usage of watch
+            // Corrected usage of watch with logging
             MiniBus.watch('buttonComponent.data-click', (value) => {
+                logEvent(`Button click state changed: ${value}`);
                 MiniBus.requestStateChange('buttonComponent', 'toggleButton.data-text', value === 'true' ? 'Hide Sidebar' : 'Show Sidebar');
             });
         </script>
     </div>
 
     <!-- Initialize MiniBus -->
-    <script>
+    <script nonce-placeholder>
         document.addEventListener('DOMContentLoaded', () => {
+            logEvent('Document loaded, initializing MiniBus');
             MiniBus.init();
         });
     </script>
