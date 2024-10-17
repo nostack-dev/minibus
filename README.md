@@ -1,7 +1,7 @@
 # 🚌MiniBus - Easy State Management
 
 ## Overview
-MiniBus.js is a lightweight JavaScript state management system designed to handle state changes and event communications between components in a declarative and controlled manner. It is useful for projects that require clear ownership and control over which components can modify the state of other components.
+MiniBus is a lightweight JavaScript state management system designed to handle state changes and event communications between components in a declarative and controlled manner. It is useful for projects that require clear ownership and control over which components can modify the state of other components.
 
 ## Features
 - **Hierarchical Scoped Ownership**: Only components that have explicit permissions can modify the state of other components.
