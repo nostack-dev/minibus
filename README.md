@@ -1,4 +1,4 @@
-# 🚌MiniBus - Easy State Management
+# 🚌MiniBus - Easy Event Bus
 
 ## Overview
 MiniBus is a lightweight JavaScript state management system designed to handle state changes and event communications between components in a declarative and controlled manner. It is useful for projects that require clear ownership and control over which components can modify the state of other components.
